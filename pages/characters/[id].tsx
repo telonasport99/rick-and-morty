@@ -4,6 +4,8 @@ import {PageWrapper} from "components/PageWrapper/PageWrapper";
 import {CharacterCard} from "components/Card/CharacterCard/CharacterCard";
 import {getLayout} from "components/Layout/BaseLayout/BaseLayout";
 import {GetStaticPaths, GetStaticProps} from "next";
+import {useRouter} from "next/router";
+import styled from "styled-components";
 
 export const getStaticPaths:GetStaticPaths = async ()=>{
     const {results} = await API.rickAndMorty.getCharacters()
@@ -13,7 +15,7 @@ export const getStaticPaths:GetStaticPaths = async ()=>{
 
     return{
         paths,
-        fallback:'blocking'
+        fallback:true
     }
 }
 export const getStaticProps:GetStaticProps = async ({params})=>{
@@ -36,11 +38,43 @@ type PropsType = {
 }
 const Character = (props:PropsType) =>{
     const {character} = props
+    const router = useRouter()
+    if(router.isFallback){
+        return (<div>Loading....</div>)
+    }
+    const characterId = router.query.id
+    const goToCharacters=()=>router.push('/characters')
+
     return(
         <PageWrapper>
+            <Container>
+            <IdText>ID:{characterId}</IdText>
             <CharacterCard key={character.id} character={character}/>
+            <Button onClick={goToCharacters}>go to characters</Button>
+            </Container>
         </PageWrapper>
     )
 }
 Character.getLayout = getLayout
 export default Character
+const IdText = styled.div`
+  font-size: 40px;
+  
+`
+const Button = styled.button`
+  width:340px;
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  background: wheat;
+   &:hover{
+     background: #fa52d3;
+     color: white;
+   }
+`
+const Container = styled.div`
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  row-gap: 20px;
+`
