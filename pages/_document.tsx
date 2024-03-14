@@ -6,15 +6,17 @@ import Document, {
     NextScript,
 } from "next/document";
 import { ServerStyleSheet } from "styled-components";
+import {AppType} from "next/app";
+import {AppPropsType} from "next/dist/shared/lib/utils";
 
 class MyDocument extends Document {
     static async getInitialProps(ctx: DocumentContext) {
         const sheet = new ServerStyleSheet();
 
         try {
-            ctx.renderPage({
-                enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
-            });
+            const enhanceApp = (App: AppType<{}>) => (props: AppPropsType<any, {}>) => {
+                return sheet.collectStyles(<App {...props} />);
+            };
 
             const initialProps = await Document.getInitialProps(ctx);
             return {

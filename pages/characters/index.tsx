@@ -10,8 +10,8 @@ export const getStaticProps = async ()=>{
     const characters = await API.rickAndMorty.getCharacters()
     return {
         props:{
-            characters
-        }
+            characters,
+        },
     }
 }
 type PropsType = {
