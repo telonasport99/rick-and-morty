@@ -11,7 +11,7 @@ export const Header = () => (
 )
 
 const Navbar = styled.div`
-  display: flex;
+  display: flex; 
   justify-content: center;
   width: 1280px;
   max-width: 100%;
